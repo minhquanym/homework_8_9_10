@@ -193,11 +193,16 @@ Ray Camera::generate_ray(double x, double y) const {
   // compute position of the input sensor sample coordinate on the
   // canonical sensor plane one unit away from the pinhole.
   // Note: hFov and vFov are in degrees.
-  //
+  
+  Vector3D bottomLeft = Vector3D(-tan(radians(hFov) / 2), -tan(radians(vFov) / 2), -1);
+  Vector3D topRight = Vector3D(tan(radians(hFov) / 2), tan(radians(vFov) / 2), -1);
+  Vector3D sensorCameraSpace = Vector3D((1-x) * bottomLeft.x + x * topRight.x, (1-y) * bottomLeft.y + y * topRight.y, -1);
+  Vector3D sensorWorldSpace = c2w * sensorCameraSpace;
 
-
-  return Ray(pos, Vector3D(0, 0, -1));
-
+  Ray res = Ray(pos, sensorWorldSpace.unit());
+  res.min_t = nClip;
+  res.max_t = fClip;
+  return res;
 }
 
 } // namespace CGL
