@@ -33,9 +33,10 @@ bool Triangle::has_intersection(const Ray &r) const {
   Vector3D s = r.o - p1;
   Vector3D s1 = cross(r.d, e2);
   Vector3D s2 = cross(s, e1);
-  double t = dot(s2, e2) / dot(s1, e1);
-  double b1 = dot(s1, s) / dot(s1, e1);
-  double b2 = dot(s2, r.d) / dot(s1, e1);
+  Vector3D tmp = Vector3D(dot(s2, e2), dot(s1, s), dot(s2, r.d)) / dot(s1, e1);
+  double t = tmp.x;
+  double b1 = tmp.y;
+  double b2 = tmp.z;
 
   // check t in visible range and b1, b2 in [0, 1]
   if (t < r.min_t || t > r.max_t || b1 < 0 || b1 > 1 || b2 < 0 || b2 > 1) {
@@ -55,17 +56,21 @@ bool Triangle::intersect(const Ray &r, Intersection *isect) const {
   Vector3D s = r.o - p1;
   Vector3D s1 = cross(r.d, e2);
   Vector3D s2 = cross(s, e1);
-  double t = dot(s2, e2) / dot(s1, e1);
-  double b1 = dot(s1, s) / dot(s1, e1);
-  double b2 = dot(s2, r.d) / dot(s1, e1);
+
+  Vector3D tmp = Vector3D(dot(s2, e2), dot(s1, s), dot(s2, r.d)) / dot(s1, e1);
+  double t = tmp.x;
+  double b1 = tmp.y;
+  double b2 = tmp.z;
 
   // check t in visible range and b1, b2 in [0, 1]
   if (t < r.min_t || t > r.max_t || b1 < 0 || b1 > 1 || b2 < 0 || b2 > 1 || b1 + b2 > 1) {
     return false;
   }
 
+  r.max_t = t;
+
   isect->t = t;
-  isect->n = (1 - b1 - b2)*n1 + b1*n2 + b2*n3;
+  isect->n = ((1 - b1 - b2)*n1 + b1*n2 + b2*n3).unit();
   isect->primitive = this;
   isect->bsdf = get_bsdf();
 
