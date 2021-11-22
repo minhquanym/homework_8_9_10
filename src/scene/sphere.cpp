@@ -62,7 +62,8 @@ bool Sphere::intersect(const Ray &r, Intersection *i) const {
 
   r.max_t = t1;
   i->t = t1;
-  i->n = (r.o + r.d * i->t - o).unit();
+  i->n = (r.o + r.d * i->t - o);
+  i->n.normalize();
   i->primitive = this;
   i->bsdf = get_bsdf();
   return true;

@@ -17,7 +17,7 @@
 <br />
 <h1 align="middle">Assignment 3: PathTracer</h1>
     <h2 align="middle">Nguyen Minh Quan</h2>
-
+    <h3 align="middle" ><a href="https://github.com/minhquanym/homework_8_9_10">Link Code Github</a></h3>
     <div class="padded">
     <h2 align="middle">Part 1: Ray Generation and Intersection</h2>
         <h3>Task 1: Generate camera ray</h3>
@@ -61,10 +61,85 @@
                 </tr>
             </table>
         </div>
+
+    <h2 align="middle">Part 2: Bounding Volume Hierarchy</h2>
+        <h3>Task 0: Timing Experiment</h3>
+        <div align="center">
+            <p>Sau khi chạy ví dụ dưới, thời gian để render đo được là <strong>66.3938 giây</strong></p>
+            <code>./pathtracer -t 8 -r 800 600 -f cow.png ../dae/meshedit/cow.dae</code>
+            <p>Thời gian chạy là hơn 1 phút, hình ảnh render được như hình dưới</p>
+            <table style="width=100%">
+                <tr>
+                    <td align="middle">
+                    <img src="images/005.png" width="480px" />
+                    <figcaption align="middle">Cow.dae sau khi render</figcaption>
+                </tr>
+            </table>
+        </div>
+        <h3>Task 1: Constructing the BVH</h3>
+        <div align="center">
+            <p>Task này thực hiện xây dựng cây BVH từ tập primitives cho sẵn</p>
+            <p>Em sẽ tạo ra 1 bounding box từ các centroid của các primitives, gọi là centroidBox</p> 
+            <p>Điểm em sẽ chọn làm điểm chia sẽ là centroid của centroidBox</p>
+            <p>Làm như vậy em sẽ đảm bảo được không có trường hợp nào, khi chia tập mà một trong 2 vector lại rỗng</p>
+            <table style="width=100%">
+                <tr>
+                    <td align="middle">
+                    <img src="images/006.png" width="480px" />
+                    <figcaption align="middle">Code đệ quy</figcaption>
+                </tr>
+                <tr>
+                    <td align="middle">
+                    <img src="images/007.png" width="480px" />
+                    <figcaption align="middle">Màn hình debug</figcaption>
+                </tr>
+            </table>
+            <p>Khi thực hiện split thì em sẽ thay đổi vị trí các phần tử dựa trên vector primitives có sẵn và đệ quy xuống dưới để xây dựng tiếp 2 nút con</p>
+        </div>
+
+        <h3>Task 2: Intersecting the Bounding Box</h3>
+        <div align="center">
+            <p>Phần này thì không có gì nhiều, chỉ cần chú ý check đủ các điều kiện của t0 và t1</p>
+        </div>
+
+        <h3>Task 3: Intersecting the BVH</h3>
+        <div align="center">
+            <p>Ở đây, ta sẽ sử dụng cây BVH đã xây dựng ở Task 1 để tính toán</p>
+            <p>Đầu tiên ta sẽ check với bounding box ở nút hiện tại</p>
+            <p>Sau đó, Nếu đó là nút lá, thì ta sẽ duyệt qua các primitives để tính toán</p>
+            <p>Nếu không thì ta sẽ đệ quy tính toán ở hai nút con</p>
+            <table style="width=100%">
+                <tr>
+                    <td align="middle">
+                    <img src="images/005.png" width="480px" />
+                    <figcaption align="middle">cow.dae sau khi render</figcaption>
+                </tr>
+            </table>
+            <p>Kết quả thu được, thời gian chạy giảm xuống còn <strong>0.2543 giây</strong> và hình ảnh thu được không thay đổi</p>
+            <p>Dưới đây là một số hình khác, thời gian chạy cũng đều dưới 1 giây</p>
+            <table style="width=100%">
+                <tr>
+                    <td align="middle">
+                    <img src="images/008.png" width="480px" />
+                    <figcaption align="middle">CBbunny.dae</figcaption>
+                </tr>
+                <tr>
+                    <td align="middle">
+                    <img src="images/009.png" width="480px" />
+                    <figcaption align="middle">dragon.dae</figcaption>
+                </tr>
+                <tr>
+                    <td align="middle">
+                    <img src="images/010.png" width="480px" />
+                    <figcaption align="middle">bench.dae</figcaption>
+                </tr>
+            </table>
+        </div>
 </div>
 </body>
 </html>
-
+<!-- Before use BVH 66.3938s -->
+<!-- After use BVH 0.2543s -->
 
 
 
