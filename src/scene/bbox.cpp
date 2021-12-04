@@ -27,7 +27,7 @@ bool BBox::intersect(const Ray& r, double& t0, double& t1) const {
   }
   double tMin = std::max({tmin.x, tmin.y, tmin.z});
   double tMax = std::min({tmax.x, tmax.y, tmax.z});
-  if (tMin > tMax || tMin < 0) {
+  if (tMin > tMax) {
     return false;
   }
   t0 = tMin;
